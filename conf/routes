@@ -18,6 +18,11 @@ GET     /                               controllers.HomeController.index
 ###
 GET     /info                           controllers.HomeController.info
 
+GET     /users                           controllers.UserController.list
+GET     /users/:id                           controllers.UserController.get(id: Int)
+POST     /users                           controllers.UserController.create
+PUT     /users                           controllers.UserController.update
+
 ### NoDocs ###
 GET     /docs/swagger-ui/*file          controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
 
