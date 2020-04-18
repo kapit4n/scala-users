@@ -1,0 +1,25 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+# An example controller showing a sample home page
+GET     /                               controllers.HomeController.index
+
+###
+#  summary: print application informations
+#  tags:
+#    - App Endpoints
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        $ref: '#/definitions/com.iheart.api.Protocol.AppInfo'
+###
+GET     /info                           controllers.HomeController.info
+
+### NoDocs ###
+GET     /docs/swagger-ui/*file          controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
+
+### NoDocs ###
+GET     /assets/*file                   controllers.Assets.versioned(path="/public", file: Asset)
