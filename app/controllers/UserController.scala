@@ -3,8 +3,10 @@ package controllers
 import javax.inject._
 import models.User
 import play.api.{Configuration, Logger}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import play.api.mvc._
+import play.api.data.Form
+import play.api.data.Forms._
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -62,14 +64,14 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration) 
     * @return model.User
     */
   def create() = Action { implicit request: Request[AnyContent] =>
-    
-    val firstName0 = "Sheindel"
-    val lastName0 = "Arce"
-    val age0 = 40
-    val capacity0 = 100
-
-    val user0 = User(firstName0, lastName0, age0, capacity0)
-    Ok(Json.toJson(user0))
+    userForm.bindFromRequest.fold(
+      errorForm => {
+        Ok(Json.toJson("Error to create user"))
+      },
+      user => {
+        Ok(Json.toJson(user))
+      }
+    )
   }
 
   /**
@@ -77,16 +79,31 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration) 
     *
     * @return model.User
     */
-  def update() = Action { implicit request: Request[AnyContent] =>
-
-    val firstName0 = "Sheindel"
-    val lastName0 = "Arce"
-    val age0 = 40
-    val capacity0 = 100
-
-    val user0 = User(firstName0, lastName0, age0, capacity0)
-    // logger.info(request)
-    Ok(Json.toJson(user0))
+  def update(id: Int) = Action { implicit request: Request[AnyContent] =>
+  userForm.bindFromRequest.fold(
+      errorForm => {
+        Ok(Json.toJson("Error to update user"))
+      },
+      user => {
+        Ok(Json.toJson(user))
+      }
+    )
   }
 
+
+val userForm: Form[UserForm] = Form (
+  mapping(
+    "firstName" -> nonEmptyText,
+    "lastName" -> nonEmptyText,
+    "age" -> number,
+    "capacity" -> number
+  )(UserForm.apply)(UserForm.unapply(_))
+)
+
+}
+
+case class UserForm(firstName: String, lastName: String, age: Int, capacity: Int)
+
+object UserForm {
+  implicit val formatter: OFormat[UserForm] = Json.format[UserForm]
 }
