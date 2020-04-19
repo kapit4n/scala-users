@@ -61,10 +61,15 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration) 
     *
     * @return model.User
     */
-  def create(u: User) = Action { implicit request: Request[AnyContent] =>
+  def create() = Action { implicit request: Request[AnyContent] =>
     
-    logger.info(u.firstName)
-    Ok(Json.toJson(u))
+    val firstName0 = "Sheindel"
+    val lastName0 = "Arce"
+    val age0 = 40
+    val capacity0 = 100
+
+    val user0 = User(firstName0, lastName0, age0, capacity0)
+    Ok(Json.toJson(user0))
   }
 
   /**
@@ -72,10 +77,16 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration) 
     *
     * @return model.User
     */
-  def update(u: User) = Action { implicit request: Request[AnyContent] =>
+  def update() = Action { implicit request: Request[AnyContent] =>
 
-    logger.info(u.firstName)
-    Ok(Json.toJson(u))
+    val firstName0 = "Sheindel"
+    val lastName0 = "Arce"
+    val age0 = 40
+    val capacity0 = 100
+
+    val user0 = User(firstName0, lastName0, age0, capacity0)
+    // logger.info(request)
+    Ok(Json.toJson(user0))
   }
 
 }
