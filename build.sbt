@@ -30,10 +30,11 @@ lazy val dockerSettings = Seq(
 val config    = "com.typesafe" % "config" % "1.3.2"
 val swaggerUi = "org.webjars" % "swagger-ui" % "2.2.0"
 val scalaTest = "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2"
-val slick = "com.typesafe.play" %% "play-slick" % "4.0.0"
-val evolutions = "com.typesafe.play" %% "play-slick-evolutions" % "4.0.0"
-val h2database = "com.h2database" % "h2" % "1.4.195"
-val playJson = "com.typesafe.play" %% "play-json" % "2.7.1"
+val h2database = "com.h2database" % "h2" % "1.4.199"
+val playJson = "com.typesafe.play" %% "play-json" % "2.8.1"
+val slick = "com.typesafe.play" %% "play-slick" % "5.0.0"
+val evolutions = "com.typesafe.play" %% "play-slick-evolutions" % "5.0.0"
+
 
 lazy val root = (project in file("."))
   .enablePlugins(

@@ -15,7 +15,7 @@ class UserRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
   import dbConfig._
   import driver.api._
 
-  private class UsersTable(tag: Tag) extends Table[User](tag, "Users") {
+  private class UsersTable(tag: Tag) extends Table[User](tag, "users") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def firstName = column[String]("firstName")
@@ -41,5 +41,9 @@ class UserRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
 
   def list(): Future[Seq[User]] = db.run {
     users.result
+  }
+
+  def get(id: Long): Future[Seq[User]] = db.run {
+    users.filter(_.id === id).result
   }
 }
