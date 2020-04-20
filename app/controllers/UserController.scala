@@ -1,19 +1,21 @@
 package controllers
 
 import javax.inject._
-import models.User
 import play.api.{Configuration, Logger}
 import play.api.libs.json.{Json, OFormat}
 import play.api.mvc._
 import play.api.data.Form
 import play.api.data.Forms._
 
+import dal._
+import models.User
+
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's User page and basic informations
  */
 @Singleton
-class UserController @Inject()(cc: ControllerComponents, config: Configuration) extends AbstractController(cc) {
+class UserController @Inject()(cc: ControllerComponents, config: Configuration, repo: UserRepository) extends AbstractController(cc) {
 
   val logger: Logger = Logger(this.getClass)
 
@@ -33,8 +35,8 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration) 
     val age1 = 40
     val capacity1 = 100
 
-    val user0 = User(firstName0, lastName0, age0, capacity0)
-    val user1 = User(firstName1, lastName1, age1, capacity1)
+    val user0 = User(1L, firstName0, lastName0, age0, capacity0)
+    val user1 = User(1L, firstName1, lastName1, age1, capacity1)
 
     logger.info("Called user list")
     Ok(Json.toJson(Array(user0, user1)))
@@ -51,7 +53,7 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration) 
     val age0 = 40
     val capacity0 = 100
 
-    val user0 = User(firstName0, lastName0, age0, capacity0)
+    val user0 = User(1L, firstName0, lastName0, age0, capacity0)
 
     logger.info(id.toString)
     Ok(Json.toJson(user0))
@@ -64,12 +66,14 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration) 
     * @return model.User
     */
   def create() = Action { implicit request: Request[AnyContent] =>
-    userForm.bindFromRequest.fold(
+    createUserForm.bindFromRequest.fold(
       errorForm => {
         Ok(Json.toJson("Error to create user"))
       },
       user => {
-        Ok(Json.toJson(user))
+        repo.create(user.firstName, user.lastName, user.age, user.capacity).map { u => 
+          Ok(Json.toJson(u))
+        }
       }
     )
   }
@@ -80,7 +84,7 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration) 
     * @return model.User
     */
   def update(id: Int) = Action { implicit request: Request[AnyContent] =>
-  userForm.bindFromRequest.fold(
+  updateUserForm.bindFromRequest.fold(
       errorForm => {
         Ok(Json.toJson("Error to update user"))
       },
@@ -91,19 +95,35 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration) 
   }
 
 
-val userForm: Form[UserForm] = Form (
-  mapping(
-    "firstName" -> nonEmptyText,
-    "lastName" -> nonEmptyText,
-    "age" -> number,
-    "capacity" -> number
-  )(UserForm.apply)(UserForm.unapply(_))
-)
+  val createUserForm: Form[CreateUserForm] = Form (
+    mapping(
+      "firstName" -> nonEmptyText,
+      "lastName" -> nonEmptyText,
+      "age" -> number,
+      "capacity" -> number
+    )(CreateUserForm.apply)(CreateUserForm.unapply(_))
+  )
+
+  val updateUserForm: Form[UpdateUserForm] = Form (
+    mapping(
+      "id" -> longNumber,
+      "firstName" -> nonEmptyText,
+      "lastName" -> nonEmptyText,
+      "age" -> number,
+      "capacity" -> number
+    )(UpdateUserForm.apply)(UpdateUserForm.unapply(_))
+  )
 
 }
 
-case class UserForm(firstName: String, lastName: String, age: Int, capacity: Int)
+case class CreateUserForm(firstName: String, lastName: String, age: Int, capacity: Int)
 
-object UserForm {
-  implicit val formatter: OFormat[UserForm] = Json.format[UserForm]
+case class UpdateUserForm(id: Long,firstName: String, lastName: String, age: Int, capacity: Int)
+
+object CreateUserForm {
+  implicit val formatter: OFormat[CreateUserForm] = Json.format[CreateUserForm]
+}
+
+object UpdateUserForm {
+  implicit val formatter: OFormat[UpdateUserForm] = Json.format[UpdateUserForm]
 }
