@@ -46,4 +46,9 @@ class UserRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
   def get(id: Long): Future[Seq[User]] = db.run {
     users.filter(_.id === id).result
   }
+
+  def update(id: Int, firstName: String, lastName: String, age: Int, capacity: Int): Future[Seq[User]] = db.run {
+    db.run(users.filter(_.id === id.toLong).map(c => (c.firstName, c.lastName, c.age, c.capacity)).update((firstName, lastName, age, capacity)))
+    users.filter(_.id === id.toLong).result
+  }
 }
