@@ -49,16 +49,14 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration, 
     *
     * @return model.User
     */
-  def create() = Action.async(parse.json) { implicit request: Request[JsValue] =>
-    val userData = request.body
-    val firstName = (userData \ "firstName").as[String];
-    val lastName = (userData \ "lastName").as[String];
-    val age = (userData \ "capacity").as[String].toInt;
-    val capacity = (userData \ "capacity").as[String].toInt;
-
-    repo.create(firstName, lastName, age, capacity).map { res => {
-      Ok(Json.toJson(res))
-    }}
+  def create() = Action.async(parse.json) { implicit request =>
+     request.body.validate[CreateUserForm].fold({ _ => 
+      Future(Ok(Json.obj("status" -> "400", "message" -> "Error parse data")))
+    }, { user =>
+      repo.create(user.firstName, user.lastName, user.age, user.capacity).map { u => 
+        Ok(Json.toJson(u))
+      }
+    })
   }
 
   /**
@@ -66,16 +64,14 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration, 
     *
     * @return model.User
     */
-  def update(id: Int) = Action.async(parse.json) { implicit request: Request[JsValue] =>
-    val userData = request.body
-    val firstName = (userData \ "firstName").as[String];
-    val lastName = (userData \ "lastName").as[String];
-    val age = (userData \ "capacity").as[String].toInt;
-    val capacity = (userData \ "capacity").as[String].toInt;
-    
-    repo.update(id, firstName, lastName, age, capacity).map { res => {
-      Ok(Json.toJson(res))
-    }}
+  def update(id: Int) = Action.async(parse.json) { implicit request =>
+     request.body.validate[UpdateUserForm].fold({ _ => 
+      Future(Ok(Json.obj("status" -> "400", "message" -> "Error parse data")))
+    }, { user =>
+      repo.update(id, user.firstName, user.lastName, user.age, user.capacity).map { u => 
+        Ok(Json.toJson(u))
+      }
+    })
   }
 
 
@@ -90,7 +86,6 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration, 
 
   val updateUserForm: Form[UpdateUserForm] = Form (
     mapping(
-      "id" -> longNumber,
       "firstName" -> nonEmptyText,
       "lastName" -> nonEmptyText,
       "age" -> number,
@@ -102,7 +97,7 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration, 
 
 case class CreateUserForm(firstName: String, lastName: String, age: Int, capacity: Int)
 
-case class UpdateUserForm(id: Long,firstName: String, lastName: String, age: Int, capacity: Int)
+case class UpdateUserForm(firstName: String, lastName: String, age: Int, capacity: Int)
 
 object CreateUserForm {
   implicit val formatter: OFormat[CreateUserForm] = Json.format[CreateUserForm]
