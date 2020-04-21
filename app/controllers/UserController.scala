@@ -50,10 +50,10 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration, 
     * @return model.User
     */
   def create() = Action.async(parse.json) { implicit request =>
-     request.body.validate[CreateUserForm].fold({ _ => 
+     request.body.validate[UserForm].fold({ _ => 
       Future(Ok(Json.obj("status" -> "400", "message" -> "Error parse data")))
     }, { user =>
-      repo.create(user.firstName, user.lastName, user.age, user.capacity).map { u => 
+      repo.create(user.firstName, user.lastName, user.email, user.dateOfBirth, user.gender).map { u => 
         Ok(Json.toJson(u))
       }
     })
@@ -65,44 +65,28 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration, 
     * @return model.User
     */
   def update(id: Int) = Action.async(parse.json) { implicit request =>
-     request.body.validate[UpdateUserForm].fold({ _ => 
+     request.body.validate[UserForm].fold({ _ => 
       Future(Ok(Json.obj("status" -> "400", "message" -> "Error parse data")))
     }, { user =>
-      repo.update(id, user.firstName, user.lastName, user.age, user.capacity).map { u => 
+      repo.update(id, user.firstName, user.lastName, user.email, user.dateOfBirth, user.gender).map { u => 
         Ok(Json.toJson(u))
       }
     })
   }
 
-
-  val createUserForm: Form[CreateUserForm] = Form (
+  val userForm: Form[UserForm] = Form (
     mapping(
       "firstName" -> nonEmptyText,
       "lastName" -> nonEmptyText,
-      "age" -> number,
-      "capacity" -> number
-    )(CreateUserForm.apply)(CreateUserForm.unapply(_))
+      "email" -> nonEmptyText,
+      "dateOfBirth" -> nonEmptyText,
+      "gender" -> nonEmptyText
+    )(UserForm.apply)(UserForm.unapply(_))
   )
-
-  val updateUserForm: Form[UpdateUserForm] = Form (
-    mapping(
-      "firstName" -> nonEmptyText,
-      "lastName" -> nonEmptyText,
-      "age" -> number,
-      "capacity" -> number
-    )(UpdateUserForm.apply)(UpdateUserForm.unapply(_))
-  )
-
 }
 
-case class CreateUserForm(firstName: String, lastName: String, age: Int, capacity: Int)
+case class UserForm(firstName: String, lastName: String, email: String, dateOfBirth: String, gender: String)
 
-case class UpdateUserForm(firstName: String, lastName: String, age: Int, capacity: Int)
-
-object CreateUserForm {
-  implicit val formatter: OFormat[CreateUserForm] = Json.format[CreateUserForm]
-}
-
-object UpdateUserForm {
-  implicit val formatter: OFormat[UpdateUserForm] = Json.format[UpdateUserForm]
+object UserForm {
+  implicit val formatter: OFormat[UserForm] = Json.format[UserForm]
 }
