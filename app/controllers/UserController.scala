@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject._
 import play.api.{Configuration, Logger}
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json._
 import scala.concurrent.{ExecutionContext, Future, Await}
 
 import play.api.mvc._
@@ -49,17 +49,14 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration, 
     *
     * @return model.User
     */
-  def create() = Action.async { implicit request: Request[AnyContent] =>
-    createUserForm.bindFromRequest.fold(
-      errorForm => {
-        Future.successful(Ok(Json.toJson("Error to create user")))
-      },
-      user => {
-        repo.create(user.firstName, user.lastName, user.age, user.capacity).map { u => 
-          Ok(Json.toJson(u))
-        }
-      }
-    )
+  def create() = Action(parse.json) { implicit request: Request[JsValue] =>
+    val userData = request.body
+    val firstName = (userData \ "firstName").as[String];
+    val lastName = (userData \ "lastName").as[String];
+    val age = (userData \ "age").as[Long];
+    val capacity = (userData \ "capacity").as[Int];
+  println(capacity)
+    Ok("res")
   }
 
   /**
@@ -70,7 +67,9 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration, 
   def update(id: Int) = Action { implicit request: Request[AnyContent] =>
   updateUserForm.bindFromRequest.fold(
       errorForm => {
-        Ok(Json.toJson("Error to update user"))
+        println("Goes here")
+        println(errorForm)
+        Ok(Json.toJson(errorForm.toString))
       },
       user => {
         Ok(Json.toJson(user))
