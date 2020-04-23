@@ -51,3 +51,15 @@ and you can test the ```/info``` endpoint:
 ```
 curl localhost:9000/info
 ```
+
+## TABLES
+- Users(id, name, roleId)
+- Roles(id, name)
+- Projects(id, name, description, features)
+- Groups(users, id, name, teamLead)
+- ProjectGroup(groupId, projectId, )
+- Tasks(projectId, id, name, status, description)
+- Permissions(id, name)
+- RolePermissions(roleId, permissionId)
+- TaskActivity(status Changed, hour tracked, taskId, description, userId)
+- TaskAsignation(taskId, userId)
