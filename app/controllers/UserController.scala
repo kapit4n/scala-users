@@ -33,6 +33,17 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration, 
   }
 
   /**
+    * Return roles list
+    *
+    * @return model.Roles
+    */
+  def listRoles() = Action.async { implicit request =>
+    repo.listRoles().map{ data => 
+      Ok(Json.toJson(data))
+    }
+  }
+
+  /**
     * Return user by id
     *
     * @return model.User
@@ -53,8 +64,23 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration, 
      request.body.validate[UserForm].fold({ _ => 
       Future(Ok(Json.obj("status" -> "400", "message" -> "Error parse data")))
     }, { user =>
-      repo.create(user.firstName, user.lastName, user.email, user.dateOfBirth, user.gender).map { u => 
+      repo.create(user.firstName, user.lastName, user.email, user.dateOfBirth, user.gender, user.roleId).map { u => 
         Ok(Json.toJson(u))
+      }
+    })
+  }
+
+  /**
+    * Return created role
+    *
+    * @return model.Role
+    */
+  def createRole() = Action.async(parse.json) { implicit request =>
+     request.body.validate[RoleForm].fold({ _ => 
+      Future(Ok(Json.obj("status" -> "400", "message" -> "Error parse data")))
+    }, { role =>
+      repo.createRole(role.name).map { r => 
+        Ok(Json.toJson(r))
       }
     })
   }
@@ -80,13 +106,27 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration, 
       "lastName" -> nonEmptyText,
       "email" -> nonEmptyText,
       "dateOfBirth" -> nonEmptyText,
-      "gender" -> nonEmptyText
+      "gender" -> nonEmptyText,
+      "roleId" -> longNumber
     )(UserForm.apply)(UserForm.unapply(_))
   )
+  
+  val roleForm: Form[RoleForm] = Form (
+    mapping(
+      "name" -> nonEmptyText,
+    )(RoleForm.apply)(RoleForm.unapply(_))
+  )
+
 }
 
-case class UserForm(firstName: String, lastName: String, email: String, dateOfBirth: String, gender: String)
+case class UserForm(firstName: String, lastName: String, email: String, dateOfBirth: String, gender: String, roleId: Long)
 
 object UserForm {
   implicit val formatter: OFormat[UserForm] = Json.format[UserForm]
+}
+
+case class RoleForm(name: String)
+
+object RoleForm {
+  implicit val formatter: OFormat[RoleForm] = Json.format[RoleForm]
 }
