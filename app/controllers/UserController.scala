@@ -33,6 +33,17 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration, 
   }
 
   /**
+    * Return users list
+    *
+    * @return model.User
+    */
+  def listUsersInfo() = Action.async { implicit request =>
+    repo.listUsersInfo().map{ data => 
+      Ok(Json.toJson(data))
+    }
+  }
+
+  /**
     * Return roles list
     *
     * @return model.Roles

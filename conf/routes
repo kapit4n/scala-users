@@ -20,6 +20,7 @@ GET     /info                           controllers.HomeController.info
 
 # Users 
 GET     /users                           controllers.UserController.list
+GET     /usersInfo                           controllers.UserController.listUsersInfo
 GET     /users/:id                           controllers.UserController.get(id: Int)
 POST     /users                           controllers.UserController.create
 PUT     /users/:id                           controllers.UserController.update(id: Int)

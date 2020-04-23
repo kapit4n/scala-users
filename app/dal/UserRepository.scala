@@ -5,6 +5,7 @@ import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
 import models.User
+import models.UserInfo
 import models.Role
 
 import scala.concurrent.{Future, ExecutionContext}
@@ -58,6 +59,15 @@ class UserRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
 
   def list(): Future[Seq[User]] = db.run {
     users.result
+  }
+
+  def listJoin(): Future[Seq[(String, String)]] = db.run {
+    (users join roles on (_.roleId === _.id))
+  .map{ case (u, r) => (u.firstName, r.name) }.result
+  }
+
+  def listUsersInfo(): Future[Seq[UserInfo]] = {
+    db.run((users join roles on (_.roleId === _.id)).map{ case (u, r) => (u.id, u.firstName, u.lastName, r.name) }.result).map(x => x.map( ui => UserInfo(ui._1, ui._2, ui._3, ui._4)))
   }
 
   def listRoles(): Future[Seq[Role]] = db.run {
