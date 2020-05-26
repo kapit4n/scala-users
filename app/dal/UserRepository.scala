@@ -64,9 +64,9 @@ class UserRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
 
   def listUsersInfo(): Future[Seq[UserInfo]] = {
     db.run((users join roles on (_.roleId === _.id)).map { 
-      case (u, r) => (u.id, u.firstName, u.lastName, r.name) 
+      case (u, r) => (u.id, u.firstName, u.lastName, r.name, r.id) 
     }.result
-    ).map(x => x.map( ui => UserInfo(ui._1, ui._2, ui._3, ui._4)))
+    ).map(x => x.map( ui => UserInfo(ui._1, ui._2, ui._3, ui._4, ui._5)))
   }
 
   def get(id: Long): Future[Seq[User]] = db.run {

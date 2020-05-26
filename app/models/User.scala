@@ -8,7 +8,7 @@ object User {
   implicit val formatter: OFormat[User] = Json.format[User]
 }
 
-case class UserInfo(id: Long, firstName: String, lastName: String, roleName: String)
+case class UserInfo(id: Long, firstName: String, lastName: String, roleName: String, roleId: Long)
 
 object UserInfo {
   implicit val formatter: OFormat[UserInfo] = Json.format[UserInfo]
