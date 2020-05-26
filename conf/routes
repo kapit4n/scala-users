@@ -22,6 +22,7 @@ GET     /api/v1/info                           controllers.HomeController.v1Info
 # Users 
 GET     /api/v1/users                                  controllers.UserController.list
 GET     /api/v1/usersInfo                              controllers.UserController.listUsersInfo
+GET     /api/v1/usersInfoById                              controllers.UserController.listUsersInfoById(id: Long)
 GET     /api/v1/users/:id                              controllers.UserController.get(id: Int)
 POST     /api/v1/users                                 controllers.UserController.create
 PUT     /api/v1/users/:id                              controllers.UserController.update(id: Int)

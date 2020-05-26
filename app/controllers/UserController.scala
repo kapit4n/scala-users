@@ -43,6 +43,17 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration, 
     }
   }
 
+  /**
+    * Return users list
+    *
+    * @return model.User
+    */
+  def listUsersInfoById(id: Long) = Action.async { implicit request =>
+    repo.listUsersInfoById(id).map{ data => 
+      Ok(Json.toJson(data))
+    }
+  }
+
 
   /**
     * Return user by id

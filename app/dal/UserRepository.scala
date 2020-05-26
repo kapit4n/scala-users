@@ -69,6 +69,14 @@ class UserRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
     ).map(x => x.map( ui => UserInfo(ui._1, ui._2, ui._3, ui._4, ui._5)))
   }
 
+  def listUsersInfoById(id: Long): Future[Seq[UserInfo]] = {
+    db.run(
+      (
+        for {(u, r) <- users join roles if u.id === id} yield(u.id, u.firstName, u.lastName, r.name, r.id) 
+      ).result
+    ).map(x => x.map( ui => UserInfo(ui._1, ui._2, ui._3, ui._4, ui._5)))
+  }
+
   def get(id: Long): Future[Seq[User]] = db.run {
     users.filter(_.id === id).result
   }
