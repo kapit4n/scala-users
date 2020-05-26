@@ -59,7 +59,7 @@ class UserRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
 
   def listJoin(): Future[Seq[(String, String)]] = db.run {
     (users join roles on (_.roleId === _.id))
-  .map{ case (u, r) => (u.firstName, r.name) }.result
+      .map{ case (u, r) => (u.firstName, r.name) }.result
   }
 
   def listUsersInfo(): Future[Seq[UserInfo]] = {
@@ -79,6 +79,10 @@ class UserRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
 
   def get(id: Long): Future[Seq[User]] = db.run {
     users.filter(_.id === id).result
+  }
+
+  def login(login: String, password: String): Future[Seq[User]] = db.run {
+    users.filter(x => x.login === login && x.password === password).result
   }
 
   def update(id: Int, firstName: String, lastName: String, email: String, dateOfBirth: String, gender: String): Future[Seq[User]] = db.run {

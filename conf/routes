@@ -25,6 +25,7 @@ GET     /api/v1/usersInfo                              controllers.UserControlle
 GET     /api/v1/usersInfoById                              controllers.UserController.listUsersInfoById(id: Long)
 GET     /api/v1/users/:id                              controllers.UserController.get(id: Int)
 POST     /api/v1/users                                 controllers.UserController.create
+POST     /api/v1/login                                 controllers.UserController.login
 PUT     /api/v1/users/:id                              controllers.UserController.update(id: Int)
 
 ## Roles

@@ -11,6 +11,7 @@ import play.api.data.Forms._
 
 import dal._
 import models.User
+import models.UserLogin
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -62,6 +63,20 @@ class UserController @Inject()(cc: ControllerComponents, config: Configuration, 
     */
   def get(id: Int) = Action.async { implicit request: Request[AnyContent] =>
     repo.get(id.toLong).map{ data => 
+      Ok(Json.toJson(data(0)))
+    }
+  }
+  
+
+  /**
+    * Return user by id
+    *
+    * @return model.User
+    */
+  def login = Action.async { implicit request =>
+    val json = request.body.asJson.get
+    val auth = json.as[UserLogin]
+    repo.login(auth.login, auth.password).map{ data => 
       Ok(Json.toJson(data(0)))
     }
   }

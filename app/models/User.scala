@@ -14,3 +14,9 @@ object UserInfo {
   implicit val formatter: OFormat[UserInfo] = Json.format[UserInfo]
 }
 
+case class UserLogin(login: String, password: String)
+
+object UserLogin {
+  implicit val formatter: OFormat[UserLogin] = Json.format[UserLogin]
+}
+
