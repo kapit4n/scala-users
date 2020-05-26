@@ -40,6 +40,7 @@ PUT     /api/v1/permissions/:id                              controllers.Permiss
 
 ## rolePermissions
 GET     /api/v1/rolePermissions                                  controllers.RolePermissionController.list
+GET     /api/v1/rolePermissionsPermissions                                  controllers.RolePermissionController.listRolePermissions(roleId: Long)
 GET     /api/v1/rolePermissions/:id                              controllers.RolePermissionController.get(id: Int)
 POST     /api/v1/rolePermissions                                 controllers.RolePermissionController.create
 PUT     /api/v1/rolePermissions/:id                              controllers.RolePermissionController.update(id: Int)

@@ -27,7 +27,6 @@ class UserRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
   private val roles = TableQuery[RolesTable]
 
   private class UsersTable(tag: Tag) extends Table[User](tag, "users") {
-
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def firstName = column[String]("firstName")
     def lastName = column[String]("lastName")
@@ -49,7 +48,6 @@ class UserRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
       ) += (firstName, lastName, email, dateOfBirth, gender, roleId, login, password)
   }
 
-
   def update(id: Long, firstName: String, lastName: String, email: String, dateOfBirth: String, gender: String): Future[Seq[User]] = db.run {
     users.filter(_.id === id).result
   }
@@ -65,7 +63,10 @@ class UserRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
   }
 
   def listUsersInfo(): Future[Seq[UserInfo]] = {
-    db.run((users join roles on (_.roleId === _.id)).map{ case (u, r) => (u.id, u.firstName, u.lastName, r.name) }.result).map(x => x.map( ui => UserInfo(ui._1, ui._2, ui._3, ui._4)))
+    db.run((users join roles on (_.roleId === _.id)).map { 
+      case (u, r) => (u.id, u.firstName, u.lastName, r.name) 
+    }.result
+    ).map(x => x.map( ui => UserInfo(ui._1, ui._2, ui._3, ui._4)))
   }
 
   def get(id: Long): Future[Seq[User]] = db.run {

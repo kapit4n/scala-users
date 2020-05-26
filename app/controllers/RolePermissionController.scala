@@ -31,6 +31,16 @@ class RolePermissionController @Inject()(cc: ControllerComponents, config: Confi
   }
 
   /**
+    * Return users list
+    *
+    * @return model.User
+    */
+  def listRolePermissions(roleId: Long) = Action.async { implicit request =>
+    repo.listRolePermissions(roleId).map{ data => 
+      Ok(Json.toJson(data))
+    }
+  }
+  /**
     * Return rolePermission by id
     *
     * @return model.RolePermission
@@ -73,13 +83,13 @@ class RolePermissionController @Inject()(cc: ControllerComponents, config: Confi
 
   val rolePermissionForm: Form[RolePermissionForm] = Form (
     mapping(
-      "roleId" -> number,
-      "permissionId" -> number,
+      "roleId" -> longNumber,
+      "permissionId" -> longNumber,
     )(RolePermissionForm.apply)(RolePermissionForm.unapply(_))
   )
 }
 
-case class RolePermissionForm(roleId: Int, permissionId: Int)
+case class RolePermissionForm(roleId: Long, permissionId: Long)
 
 object RolePermissionForm {
   implicit val formatter: OFormat[RolePermissionForm] = Json.format[RolePermissionForm]
