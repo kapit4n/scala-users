@@ -17,25 +17,32 @@ GET     /                               controllers.HomeController.index
 #        $ref: '#/definitions/com.iheart.api.Protocol.AppInfo'
 ###
 GET     /info                           controllers.HomeController.info
+GET     /api/v1/info                           controllers.HomeController.v1Info
 
 # Users 
-GET     /users                                  controllers.UserController.list
-GET     /usersInfo                              controllers.UserController.listUsersInfo
-GET     /users/:id                              controllers.UserController.get(id: Int)
-POST     /users                                 controllers.UserController.create
-PUT     /users/:id                              controllers.UserController.update(id: Int)
+GET     /api/v1/users                                  controllers.UserController.list
+GET     /api/v1/usersInfo                              controllers.UserController.listUsersInfo
+GET     /api/v1/users/:id                              controllers.UserController.get(id: Int)
+POST     /api/v1/users                                 controllers.UserController.create
+PUT     /api/v1/users/:id                              controllers.UserController.update(id: Int)
 
 ## Roles
-GET     /roles                                  controllers.RoleController.list
-GET     /roles/:id                              controllers.RoleController.get(id: Int)
-POST     /roles                                 controllers.RoleController.create
-PUT     /roles/:id                              controllers.RoleController.update(id: Int)
+GET     /api/v1/roles                                  controllers.RoleController.list
+GET     /api/v1/roles/:id                              controllers.RoleController.get(id: Int)
+POST     /api/v1/roles                                 controllers.RoleController.create
+PUT     /api/v1/roles/:id                              controllers.RoleController.update(id: Int)
 
 ## Permissions
-GET     /permissions                                  controllers.PermissionController.list
-GET     /permissions/:id                              controllers.PermissionController.get(id: Int)
-POST     /permissions                                 controllers.PermissionController.create
-PUT     /permissions/:id                              controllers.PermissionController.update(id: Int)
+GET     /api/v1/permissions                                  controllers.PermissionController.list
+GET     /api/v1/permissions/:id                              controllers.PermissionController.get(id: Int)
+POST     /api/v1/permissions                                 controllers.PermissionController.create
+PUT     /api/v1/permissions/:id                              controllers.PermissionController.update(id: Int)
+
+## rolePermissions
+GET     /api/v1/rolePermissions                                  controllers.RolePermissionController.list
+GET     /api/v1/rolePermissions/:id                              controllers.RolePermissionController.get(id: Int)
+POST     /api/v1/rolePermissions                                 controllers.RolePermissionController.create
+PUT     /api/v1/rolePermissions/:id                              controllers.RolePermissionController.update(id: Int)
 
 ### NoDocs ###
 GET     /docs/swagger-ui/*file          controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)

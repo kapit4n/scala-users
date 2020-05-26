@@ -14,7 +14,7 @@ import models.Permission
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
- * application's User page and basic informations
+ * application's Permission page and basic informations
  */
 @Singleton
 class PermissionController @Inject()(cc: ControllerComponents, config: Configuration, repo: PermissionRepository)(implicit ec: ExecutionContext) extends AbstractController(cc) {
@@ -31,21 +31,20 @@ class PermissionController @Inject()(cc: ControllerComponents, config: Configura
   }
 
   /**
-    * Return user by id
+    * Return permission by id
     *
-    * @return model.User
+    * @return model.Permission
     */
   def get(id: Int) = Action.async { implicit request: Request[AnyContent] =>
     repo.get(id.toLong).map{ data => 
       Ok(Json.toJson(data(0)))
     }
   }
-  
 
   /**
-    * Return created user
+    * Return created permission
     *
-    * @return model.User
+    * @return model.Permission
     */
   def create() = Action.async(parse.json) { implicit request =>
      request.body.validate[PermissionForm].fold({ _ => 
@@ -57,11 +56,10 @@ class PermissionController @Inject()(cc: ControllerComponents, config: Configura
     })
   }
 
-
   /**
-    * Return updated user
+    * Return updated permission
     *
-    * @return model.User
+    * @return model.Permission
     */
   def update(id: Int) = Action.async(parse.json) { implicit request =>
      request.body.validate[PermissionForm].fold({ _ => 

@@ -2,7 +2,7 @@ package dal
 
 import javax.inject.{Inject, Singleton}
 import play.api.db.slick.DatabaseConfigProvider
-import slick.driver.JdbcProfile
+import slick.jdbc.JdbcProfile
 
 import models.User
 import models.UserInfo

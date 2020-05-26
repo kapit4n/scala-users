@@ -40,4 +40,11 @@ class HomeController @Inject()(cc: ControllerComponents, config: Configuration) 
     logger.info("Called info")
     Ok(Json.toJson(appInfo))
   }
+
+  def v1Info() = Action { implicit request: Request[AnyContent] => 
+    val appInfo = AppInfo("Users", "v1")
+
+    logger.info("Users info")
+    Ok(Json.toJson(appInfo))
+  }
 }
