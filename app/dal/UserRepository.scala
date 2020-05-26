@@ -20,7 +20,8 @@ class UserRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
   private class RolesTable(tag: Tag) extends Table[Role](tag, "roles") {
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name") 
-    def * = (id, name) <> ((Role.apply _).tupled, Role.unapply)
+    def description = column[String]("description") 
+    def * = (id, name, description) <> ((Role.apply _).tupled, Role.unapply)
   }
 
   private val roles = TableQuery[RolesTable]
@@ -34,23 +35,20 @@ class UserRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
     def dateOfBirth = column[String]("dateOfBirth")
     def gender = column[String]("gender")
     def roleId = column[Long]("roleId")
-    def * = (id, firstName, lastName, email, dateOfBirth, gender, roleId) <> ((User.apply _).tupled, User.unapply)
+    def login = column[String]("login")
+    def password = column[String]("password")
+    def * = (id, firstName, lastName, email, dateOfBirth, gender, roleId, login, password) <> ((User.apply _).tupled, User.unapply)
     def role = foreignKey("fk_roleid", roleId, roles)(_.id)
   }
 
   private val users = TableQuery[UsersTable]
 
-  def create(firstName: String, lastName: String, email: String, dateOfBirth: String, gender: String, roleId: Long): Future[User] = db.run {
-    (users.map(p => (p.firstName, p.lastName, p.email, p.dateOfBirth, p.gender, p.roleId))
-      returning users.map(_.id) into ((u, id) => User(id, u._1, u._2, u._3, u._4, u._5, u._6))
-      ) += (firstName, lastName, email, dateOfBirth, gender, roleId)
+  def create(firstName: String, lastName: String, email: String, dateOfBirth: String, gender: String, roleId: Long, login: String, password: String): Future[User] = db.run {
+    (users.map(p => (p.firstName, p.lastName, p.email, p.dateOfBirth, p.gender, p.roleId, p.login, p.password))
+      returning users.map(_.id) into ((u, id) => User(id, u._1, u._2, u._3, u._4, u._5, u._6, u._7, u._8))
+      ) += (firstName, lastName, email, dateOfBirth, gender, roleId, login, password)
   }
 
-  def createRole(name: String): Future[Role] = db.run {
-    (roles.map(p => (p.name))
-      returning roles.map(_.id) into ((u, id) => Role(id, u))
-      ) += (name)
-  }
 
   def update(id: Long, firstName: String, lastName: String, email: String, dateOfBirth: String, gender: String): Future[Seq[User]] = db.run {
     users.filter(_.id === id).result
@@ -70,16 +68,8 @@ class UserRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
     db.run((users join roles on (_.roleId === _.id)).map{ case (u, r) => (u.id, u.firstName, u.lastName, r.name) }.result).map(x => x.map( ui => UserInfo(ui._1, ui._2, ui._3, ui._4)))
   }
 
-  def listRoles(): Future[Seq[Role]] = db.run {
-    roles.result
-  }
-
   def get(id: Long): Future[Seq[User]] = db.run {
     users.filter(_.id === id).result
-  }
-
-  def getRole(id: Long): Future[Seq[Role]] = db.run {
-    roles.filter(_.id === id).result
   }
 
   def update(id: Int, firstName: String, lastName: String, email: String, dateOfBirth: String, gender: String): Future[Seq[User]] = db.run {

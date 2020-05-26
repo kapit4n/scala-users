@@ -19,15 +19,17 @@ GET     /                               controllers.HomeController.index
 GET     /info                           controllers.HomeController.info
 
 # Users 
-GET     /users                           controllers.UserController.list
-GET     /usersInfo                           controllers.UserController.listUsersInfo
-GET     /users/:id                           controllers.UserController.get(id: Int)
-POST     /users                           controllers.UserController.create
-PUT     /users/:id                           controllers.UserController.update(id: Int)
+GET     /users                                  controllers.UserController.list
+GET     /usersInfo                              controllers.UserController.listUsersInfo
+GET     /users/:id                              controllers.UserController.get(id: Int)
+POST     /users                                 controllers.UserController.create
+PUT     /users/:id                              controllers.UserController.update(id: Int)
 
 ## Roles
-GET     /roles                           controllers.UserController.listRoles
-POST     /roles                           controllers.UserController.createRole
+GET     /roles                                  controllers.RoleController.list
+GET     /roles/:id                              controllers.RoleController.get(id: Int)
+POST     /roles                                 controllers.RoleController.create
+PUT     /roles/:id                              controllers.RoleController.update(id: Int)
 
 ### NoDocs ###
 GET     /docs/swagger-ui/*file          controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
