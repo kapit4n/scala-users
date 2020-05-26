@@ -31,6 +31,12 @@ GET     /roles/:id                              controllers.RoleController.get(i
 POST     /roles                                 controllers.RoleController.create
 PUT     /roles/:id                              controllers.RoleController.update(id: Int)
 
+## Permissions
+GET     /permissions                                  controllers.PermissionController.list
+GET     /permissions/:id                              controllers.PermissionController.get(id: Int)
+POST     /permissions                                 controllers.PermissionController.create
+PUT     /permissions/:id                              controllers.PermissionController.update(id: Int)
+
 ### NoDocs ###
 GET     /docs/swagger-ui/*file          controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
 
