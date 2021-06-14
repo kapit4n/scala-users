@@ -63,3 +63,11 @@ curl localhost:9000/info
 - RolePermissions(roleId, permissionId)
 - TaskActivity(status Changed, hour tracked, taskId, description, userId)
 - TaskAsignation(taskId, userId)
+
+## TEST
+### ROLES
+* curl --header "Content-Type: application/json" --request POST --data '{"name":"Admin", "description": "Create all"}' http://localhost:9000/api/v1/roles
+
+### PERMISSIONS
+* curl --header "Content-Type: application/json" --request POST --data '{"name":"Admin", "obj": "roles", "action": "Create"}' http://localhost:9000/api/v1/permissions
+
